@@ -1,0 +1,488 @@
+{
+  "environment": {
+    "date": "2026-11-16T03:45:54.060Z",
+    "node": "v22.17.1",
+    "platform": "Windows_NT 10.0.26300 x64",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-1155G7 @ 2.50GHz x8",
+    "memory_gb": 7.8,
+    "storage": "pglite",
+    "webhook_latency_ms": 10
+  },
+  "results": [
+    {
+      "agents": 100000,
+      "storage": "pglite",
+      "seeding": {
+        "mode": "bulk",
+        "seconds": 468,
+        "agents_per_second": 214,
+        "subscriptions": 3112
+      },
+      "memory": {
+        "before": {
+          "rss_mb": 325.9,
+          "heap_used_mb": 24.3,
+          "external_mb": 249.6
+        },
+        "after_seeding": {
+          "rss_mb": 352.4,
+          "heap_used_mb": 53.6,
+          "external_mb": 247.9
+        },
+        "after_run": {
+          "rss_mb": 1411.3,
+          "heap_used_mb": 1007.5,
+          "external_mb": 209.3
+        },
+        "per_agent_kb": 0.27
+      },
+      "candidates_per_post": {
+        "n": 280,
+        "p50": 2645,
+        "p95": 2648,
+        "p99": 2936,
+        "max": 2962
+      },
+      "candidates_trimmed_per_post": {
+        "n": 280,
+        "p50": 64681,
+        "p95": 77133,
+        "p99": 77133,
+        "max": 81899
+      },
+      "latency": {
+        "posts": 30,
+        "routing_ms": {
+          "n": 30,
+          "p50": 1188.5,
+          "p95": 2316.3,
+          "p99": 3117.5,
+          "max": 3117.5
+        },
+        "end_to_end_ms": {
+          "n": 30,
+          "p50": 2736.3,
+          "p95": 4540.9,
+          "p99": 5007.8,
+          "max": 5007.8
+        }
+      },
+      "bursts": [
+        {
+          "posts": 50,
+          "seconds": 113.57,
+          "posts_per_second": 0.4,
+          "notifications": 24442,
+          "notifications_per_second": 215,
+          "webhooks_delivered": 189,
+          "webhooks_per_second": 2,
+          "publish_to_routed_ms": {
+            "n": 50,
+            "p50": 35298,
+            "p95": 59926,
+            "p99": 62875,
+            "max": 62875
+          }
+        },
+        {
+          "posts": 200,
+          "seconds": 582.3,
+          "posts_per_second": 0.3,
+          "notifications": 98979,
+          "notifications_per_second": 170,
+          "webhooks_delivered": 810,
+          "webhooks_per_second": 1,
+          "publish_to_routed_ms": {
+            "n": 200,
+            "p50": 179984,
+            "p95": 396317,
+            "p99": 406522,
+            "max": 408749
+          }
+        }
+      ],
+      "bounds": {
+        "max_push_per_post": 25,
+        "max_unrequested_digest_per_post": 50,
+        "max_discovered_candidates_per_post": 2000,
+        "max_pushes_per_agent": 20,
+        "max_digests_per_agent": 200,
+        "webhooks_delivered": 1137,
+        "duplicate_webhooks": 0,
+        "violations": []
+      },
+      "storage_ops": {
+        "seeding": {
+          "insertAgents": {
+            "calls": 100,
+            "total_ms": 456369,
+            "p50_ms": 4564.36,
+            "p95_ms": 5532.1
+          },
+          "insertSubscription": {
+            "calls": 3112,
+            "total_ms": 1848,
+            "p50_ms": 0.57,
+            "p95_ms": 1.02
+          },
+          "getAgent": {
+            "calls": 2079,
+            "total_ms": 1341,
+            "p50_ms": 0.56,
+            "p95_ms": 1.12
+          },
+          "insertAgent": {
+            "calls": 7,
+            "total_ms": 41,
+            "p50_ms": 3.41,
+            "p95_ms": 21.45
+          },
+          "agentsWithNameKey": {
+            "calls": 28,
+            "total_ms": 26,
+            "p50_ms": 0.77,
+            "p95_ms": 1.82
+          },
+          "mutateAgent": {
+            "calls": 7,
+            "total_ms": 20,
+            "p50_ms": 2.17,
+            "p95_ms": 4.66
+          },
+          "domainOwner": {
+            "calls": 21,
+            "total_ms": 20,
+            "p50_ms": 0.47,
+            "p95_ms": 0.86
+          },
+          "pendingClaimIds": {
+            "calls": 7,
+            "total_ms": 5,
+            "p50_ms": 0.54,
+            "p95_ms": 1.12
+          }
+        },
+        "latency_phase": {
+          "getModel": {
+            "calls": 30,
+            "total_ms": 19151,
+            "p50_ms": 486.33,
+            "p95_ms": 1488.31
+          },
+          "notifiedAgentIds": {
+            "calls": 30,
+            "total_ms": 19142,
+            "p50_ms": 486.12,
+            "p95_ms": 1488.04
+          },
+          "deliveryCounts": {
+            "calls": 30,
+            "total_ms": 19097,
+            "p50_ms": 484.7,
+            "p95_ms": 1487.08
+          },
+          "affinityStats": {
+            "calls": 30,
+            "total_ms": 18621,
+            "p50_ms": 464.19,
+            "p95_ms": 1479.91
+          },
+          "interestMatches": {
+            "calls": 30,
+            "total_ms": 18501,
+            "p50_ms": 459.56,
+            "p95_ms": 1476.51
+          },
+          "discoverCandidates": {
+            "calls": 30,
+            "total_ms": 18330,
+            "p50_ms": 601.83,
+            "p95_ms": 758.74
+          },
+          "saveDeliveryState": {
+            "calls": 17978,
+            "total_ms": 12425,
+            "p50_ms": 0.6,
+            "p95_ms": 1.19
+          },
+          "getNotification": {
+            "calls": 17840,
+            "total_ms": 12310,
+            "p50_ms": 0.6,
+            "p95_ms": 1.19
+          },
+          "getAgent": {
+            "calls": 17870,
+            "total_ms": 11687,
+            "p50_ms": 0.56,
+            "p95_ms": 1.11
+          },
+          "getAgents": {
+            "calls": 198,
+            "total_ms": 6099,
+            "p50_ms": 0.75,
+            "p95_ms": 209.53
+          },
+          "insertMatchedNotifications": {
+            "calls": 29,
+            "total_ms": 3708,
+            "p50_ms": 133.75,
+            "p95_ms": 151.15
+          },
+          "annSearch": {
+            "calls": 30,
+            "total_ms": 2482,
+            "p50_ms": 67.59,
+            "p95_ms": 191.41
+          },
+          "saveRoutingLog": {
+            "calls": 30,
+            "total_ms": 1245,
+            "p50_ms": 43.25,
+            "p95_ms": 54.41
+          },
+          "publishOutbox": {
+            "calls": 222,
+            "total_ms": 942,
+            "p50_ms": 4.27,
+            "p95_ms": 6.66
+          },
+          "getRoutingLog": {
+            "calls": 30,
+            "total_ms": 509,
+            "p50_ms": 17.37,
+            "p95_ms": 20.76
+          },
+          "getPost": {
+            "calls": 306,
+            "total_ms": 221,
+            "p50_ms": 0.58,
+            "p95_ms": 1.2
+          },
+          "commentCounts": {
+            "calls": 168,
+            "total_ms": 200,
+            "p50_ms": 0.99,
+            "p95_ms": 2.02
+          },
+          "mutatePost": {
+            "calls": 90,
+            "total_ms": 172,
+            "p50_ms": 1.78,
+            "p95_ms": 3.2
+          },
+          "explicitSubscribers": {
+            "calls": 30,
+            "total_ms": 130,
+            "p50_ms": 3.78,
+            "p95_ms": 8
+          },
+          "insertPost": {
+            "calls": 30,
+            "total_ms": 49,
+            "p50_ms": 1.13,
+            "p95_ms": 2.03
+          },
+          "findRecentDuplicate": {
+            "calls": 30,
+            "total_ms": 44,
+            "p50_ms": 0.88,
+            "p95_ms": 1.62
+          },
+          "brandCandidates": {
+            "calls": 3,
+            "total_ms": 2,
+            "p50_ms": 0.78,
+            "p95_ms": 1.01
+          }
+        },
+        "bursts": {
+          "getModel": {
+            "calls": 250,
+            "total_ms": 225319,
+            "p50_ms": 727.39,
+            "p95_ms": 2341.07
+          },
+          "notifiedAgentIds": {
+            "calls": 250,
+            "total_ms": 225267,
+            "p50_ms": 727.22,
+            "p95_ms": 2340.9
+          },
+          "deliveryCounts": {
+            "calls": 250,
+            "total_ms": 225074,
+            "p50_ms": 726.62,
+            "p95_ms": 2340.26
+          },
+          "affinityStats": {
+            "calls": 250,
+            "total_ms": 191991,
+            "p50_ms": 628.17,
+            "p95_ms": 1752.47
+          },
+          "interestMatches": {
+            "calls": 250,
+            "total_ms": 191248,
+            "p50_ms": 624.48,
+            "p95_ms": 1748.99
+          },
+          "discoverCandidates": {
+            "calls": 250,
+            "total_ms": 143055,
+            "p50_ms": 510.95,
+            "p95_ms": 1594.62
+          },
+          "saveDeliveryState": {
+            "calls": 125419,
+            "total_ms": 75699,
+            "p50_ms": 0.6,
+            "p95_ms": 1.16
+          },
+          "getNotification": {
+            "calls": 124420,
+            "total_ms": 73490,
+            "p50_ms": 0.59,
+            "p95_ms": 1.16
+          },
+          "getAgent": {
+            "calls": 124670,
+            "total_ms": 69624,
+            "p50_ms": 0.57,
+            "p95_ms": 1.1
+          },
+          "getAgents": {
+            "calls": 1499,
+            "total_ms": 58649,
+            "p50_ms": 0.73,
+            "p95_ms": 190.63
+          },
+          "insertMatchedNotifications": {
+            "calls": 215,
+            "total_ms": 47908,
+            "p50_ms": 200.21,
+            "p95_ms": 369.1
+          },
+          "annSearch": {
+            "calls": 250,
+            "total_ms": 35070,
+            "p50_ms": 154.82,
+            "p95_ms": 281.77
+          }
+        }
+      },
+      "storage_details": {
+        "relations": [
+          {
+            "name": "agent_interests",
+            "kind": "table",
+            "mb": 2083.4
+          },
+          {
+            "name": "agent_interests_embedding_hnsw",
+            "kind": "index",
+            "mb": 719.8
+          },
+          {
+            "name": "agents",
+            "kind": "table",
+            "mb": 161.9
+          },
+          {
+            "name": "notifications",
+            "kind": "table",
+            "mb": 132.6
+          },
+          {
+            "name": "outbox",
+            "kind": "table",
+            "mb": 54.6
+          },
+          {
+            "name": "routing_decisions",
+            "kind": "table",
+            "mb": 19
+          },
+          {
+            "name": "notifications_dedupe",
+            "kind": "index",
+            "mb": 13.6
+          },
+          {
+            "name": "agent_interests_pkey",
+            "kind": "index",
+            "mb": 12.8
+          },
+          {
+            "name": "agents_key_hash",
+            "kind": "index",
+            "mb": 11.9
+          },
+          {
+            "name": "outbox_event_id",
+            "kind": "index",
+            "mb": 11.5
+          },
+          {
+            "name": "notifications_inbox",
+            "kind": "index",
+            "mb": 10.5
+          },
+          {
+            "name": "notifications_budget",
+            "kind": "index",
+            "mb": 10.2
+          },
+          {
+            "name": "notifications_unbatched_digest",
+            "kind": "index",
+            "mb": 9.9
+          },
+          {
+            "name": "notifications_pkey",
+            "kind": "index",
+            "mb": 9.1
+          }
+        ],
+        "explain_ann": [
+          "Limit  (cost=9349.79..10239.01 rows=600 width=40) (actual time=20.778..215.469 rows=355.00 loops=1)",
+          "  Buffers: shared hit=819 read=1182 written=323",
+          "  ->  Index Scan using agent_interests_embedding_hnsw on agent_interests  (cost=9349.79..389696.80 rows=256640 width=40) (actual time=20.755..214.259 rows=355.00 loops=1)",
+          "        Order By: (embedding <=> '[0,0,0.14500113,0,0,0,0,0,0,0.24550825,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.2946099,0,0,0,0,0,0,0,0.4260216,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,-0.34601536,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.24550825,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1160009,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.14500113,0,0,0,0,0,0,0,0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.29000226,0,0,0,0,0,0,0,0,0,0,0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.24550825,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.24550825,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.14500113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'::vector)",
+          "        Index Searches: 1",
+          "        Buffers: shared hit=819 read=1182 written=323",
+          "Planning:",
+          "  Buffers: shared read=1 written=1",
+          "Planning Time: 0.699 ms",
+          "Execution Time: 217.967 ms"
+        ],
+        "explain_candidate_index": [
+          "Limit  (cost=9847.89..9852.89 rows=2000 width=32) (actual time=857.249..858.637 rows=2000.00 loops=1)",
+          "  Buffers: shared hit=868 read=14808 written=8597",
+          "  ->  Sort  (cost=9847.89..9857.48 rows=3838 width=32) (actual time=857.245..857.765 rows=2000.00 loops=1)",
+          "        Sort Key: id",
+          "        Sort Method: still in progress  Memory: 0kB",
+          "        Buffers: shared hit=868 read=14808 written=8597",
+          "        ->  Bitmap Heap Scan on agents a  (cost=675.94..9619.41 rows=3838 width=32) (actual time=26.652..822.010 rows=67216.00 loops=1)",
+          "              Recheck Cond: ((retrieval_concepts && '{festive,food,delivery}'::text[]) OR (industry = ANY ('{payments,banking}'::text[])))",
+          "              Heap Blocks: exact=15491",
+          "              Buffers: shared hit=868 read=14808 written=8597",
+          "              ->  BitmapOr  (cost=675.94..675.94 rows=3861 width=0) (actual time=23.852..23.855 rows=0.00 loops=1)",
+          "                    Buffers: shared hit=4 read=181 written=50",
+          "                    ->  Bitmap Index Scan on agents_retrieval_concepts  (cost=0.00..653.81 rows=2312 width=0) (actual time=20.612..20.612 rows=58691.00 loops=1)",
+          "                          Index Cond: (retrieval_concepts && '{festive,food,delivery}'::text[])",
+          "                          Index Searches: 1",
+          "                          Buffers: shared hit=3 read=165 written=47",
+          "                    ->  Bitmap Index Scan on agents_industry  (cost=0.00..20.21 rows=1549 width=0) (actual time=3.224..3.224 rows=16038.00 loops=1)",
+          "                          Index Cond: (industry = ANY ('{payments,banking}'::text[]))",
+          "                          Index Searches: 2",
+          "                          Buffers: shared hit=1 read=16 written=3",
+          "Planning:",
+          "  Buffers: shared hit=1 read=1",
+          "Planning Time: 0.285 ms",
+          "Execution Time: 859.224 ms"
+        ]
+      }
+    }
+  ]
+}

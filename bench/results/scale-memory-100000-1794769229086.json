@@ -1,0 +1,377 @@
+{
+  "environment": {
+    "date": "2026-11-15T18:49:39.998Z",
+    "node": "v22.17.1",
+    "platform": "Windows_NT 10.0.26300 x64",
+    "cpu": "11th Gen Intel(R) Core(TM) i5-1155G7 @ 2.50GHz x8",
+    "memory_gb": 7.8,
+    "storage": "memory",
+    "webhook_latency_ms": 10
+  },
+  "results": [
+    {
+      "agents": 100000,
+      "storage": "memory",
+      "seeding": {
+        "mode": "api",
+        "seconds": 84.2,
+        "agents_per_second": 1187,
+        "subscriptions": 3112
+      },
+      "memory": {
+        "before": {
+          "rss_mb": 50.3,
+          "heap_used_mb": 7.9,
+          "external_mb": 3.7
+        },
+        "after_seeding": {
+          "rss_mb": 1211.8,
+          "heap_used_mb": 535.4,
+          "external_mb": 1968.7
+        },
+        "after_run": {
+          "rss_mb": 2177.7,
+          "heap_used_mb": 2581.5,
+          "external_mb": 1978.1
+        },
+        "per_agent_kb": 11.89
+      },
+      "candidates_per_post": {
+        "n": 300,
+        "p50": 2645,
+        "p95": 2648,
+        "p99": 2913,
+        "max": 2962
+      },
+      "candidates_trimmed_per_post": {
+        "n": 300,
+        "p50": 64681,
+        "p95": 77133,
+        "p99": 77133,
+        "max": 81899
+      },
+      "latency": {
+        "posts": 50,
+        "routing_ms": {
+          "n": 50,
+          "p50": 1460.7,
+          "p95": 2220.2,
+          "p99": 2474.6,
+          "max": 2474.6
+        },
+        "end_to_end_ms": {
+          "n": 50,
+          "p50": 1590.6,
+          "p95": 2403.9,
+          "p99": 2673.4,
+          "max": 2673.4
+        }
+      },
+      "bursts": [
+        {
+          "posts": 50,
+          "seconds": 88.52,
+          "posts_per_second": 0.6,
+          "notifications": 24069,
+          "notifications_per_second": 272,
+          "webhooks_delivered": 184,
+          "webhooks_per_second": 2,
+          "publish_to_routed_ms": {
+            "n": 50,
+            "p50": 41726,
+            "p95": 75260,
+            "p99": 85966,
+            "max": 85966
+          }
+        },
+        {
+          "posts": 200,
+          "seconds": 382.84,
+          "posts_per_second": 0.5,
+          "notifications": 97878,
+          "notifications_per_second": 256,
+          "webhooks_delivered": 886,
+          "webhooks_per_second": 2,
+          "publish_to_routed_ms": {
+            "n": 200,
+            "p50": 187369,
+            "p95": 357401,
+            "p99": 371284,
+            "max": 373263
+          }
+        }
+      ],
+      "bounds": {
+        "max_push_per_post": 25,
+        "max_unrequested_digest_per_post": 50,
+        "max_discovered_candidates_per_post": 2000,
+        "max_pushes_per_agent": 20,
+        "max_digests_per_agent": 200,
+        "webhooks_delivered": 1307,
+        "duplicate_webhooks": 0,
+        "violations": []
+      },
+      "storage_ops": {
+        "seeding": {
+          "getAgent": {
+            "calls": 271998,
+            "total_ms": 9755,
+            "p50_ms": 0.02,
+            "p95_ms": 0.07
+          },
+          "mutateAgent": {
+            "calls": 89980,
+            "total_ms": 9378,
+            "p50_ms": 0.08,
+            "p95_ms": 0.23
+          },
+          "insertAgent": {
+            "calls": 100000,
+            "total_ms": 6610,
+            "p50_ms": 0.05,
+            "p95_ms": 0.13
+          },
+          "agentsWithNameKey": {
+            "calls": 279967,
+            "total_ms": 6157,
+            "p50_ms": 0.02,
+            "p95_ms": 0.05
+          },
+          "insertSubscription": {
+            "calls": 3112,
+            "total_ms": 1077,
+            "p50_ms": 0.31,
+            "p95_ms": 0.74
+          },
+          "domainOwner": {
+            "calls": 279960,
+            "total_ms": 471,
+            "p50_ms": 0,
+            "p95_ms": 0
+          },
+          "brandCandidates": {
+            "calls": 89980,
+            "total_ms": 303,
+            "p50_ms": 0,
+            "p95_ms": 0.01
+          },
+          "pendingClaimIds": {
+            "calls": 89980,
+            "total_ms": 160,
+            "p50_ms": 0,
+            "p95_ms": 0
+          }
+        },
+        "latency_phase": {
+          "explicitSubscribers": {
+            "calls": 50,
+            "total_ms": 56308,
+            "p50_ms": 1108.51,
+            "p95_ms": 1766.26
+          },
+          "annSearch": {
+            "calls": 50,
+            "total_ms": 56249,
+            "p50_ms": 1106.87,
+            "p95_ms": 1765.02
+          },
+          "discoverCandidates": {
+            "calls": 50,
+            "total_ms": 9933,
+            "p50_ms": 197.41,
+            "p95_ms": 333.33
+          },
+          "getAgents": {
+            "calls": 337,
+            "total_ms": 7053,
+            "p50_ms": 0.04,
+            "p95_ms": 162.98
+          },
+          "interestMatches": {
+            "calls": 50,
+            "total_ms": 2432,
+            "p50_ms": 46.65,
+            "p95_ms": 79.66
+          },
+          "insertMatchedNotifications": {
+            "calls": 47,
+            "total_ms": 1754,
+            "p50_ms": 38.02,
+            "p95_ms": 66.76
+          },
+          "getRoutingLog": {
+            "calls": 50,
+            "total_ms": 1242,
+            "p50_ms": 22.98,
+            "p95_ms": 52.65
+          },
+          "saveRoutingLog": {
+            "calls": 50,
+            "total_ms": 1081,
+            "p50_ms": 21.43,
+            "p95_ms": 37.43
+          },
+          "getAgent": {
+            "calls": 28638,
+            "total_ms": 1062,
+            "p50_ms": 0.03,
+            "p95_ms": 0.08
+          },
+          "affinityStats": {
+            "calls": 50,
+            "total_ms": 690,
+            "p50_ms": 10.59,
+            "p95_ms": 32.48
+          },
+          "deliveryCounts": {
+            "calls": 50,
+            "total_ms": 677,
+            "p50_ms": 10.3,
+            "p95_ms": 32.16
+          },
+          "getNotification": {
+            "calls": 28588,
+            "total_ms": 580,
+            "p50_ms": 0.01,
+            "p95_ms": 0.05
+          },
+          "publishOutbox": {
+            "calls": 358,
+            "total_ms": 283,
+            "p50_ms": 0.53,
+            "p95_ms": 2.07
+          },
+          "saveDeliveryState": {
+            "calls": 28825,
+            "total_ms": 266,
+            "p50_ms": 0.01,
+            "p95_ms": 0.02
+          },
+          "getPost": {
+            "calls": 524,
+            "total_ms": 28,
+            "p50_ms": 0.04,
+            "p95_ms": 0.13
+          },
+          "mutatePost": {
+            "calls": 150,
+            "total_ms": 17,
+            "p50_ms": 0.09,
+            "p95_ms": 0.28
+          },
+          "insertPost": {
+            "calls": 50,
+            "total_ms": 8,
+            "p50_ms": 0.08,
+            "p95_ms": 0.23
+          },
+          "notifiedAgentIds": {
+            "calls": 50,
+            "total_ms": 5,
+            "p50_ms": 0.1,
+            "p95_ms": 0.17
+          },
+          "getModel": {
+            "calls": 50,
+            "total_ms": 4,
+            "p50_ms": 0.08,
+            "p95_ms": 0.15
+          },
+          "findRecentDuplicate": {
+            "calls": 50,
+            "total_ms": 4,
+            "p50_ms": 0.06,
+            "p95_ms": 0.14
+          },
+          "commentCounts": {
+            "calls": 287,
+            "total_ms": 2,
+            "p50_ms": 0,
+            "p95_ms": 0.01
+          },
+          "brandCandidates": {
+            "calls": 3,
+            "total_ms": 0,
+            "p50_ms": 0.01,
+            "p95_ms": 0.08
+          }
+        },
+        "bursts": {
+          "explicitSubscribers": {
+            "calls": 250,
+            "total_ms": 313059,
+            "p50_ms": 1129.01,
+            "p95_ms": 1757.03
+          },
+          "annSearch": {
+            "calls": 250,
+            "total_ms": 312734,
+            "p50_ms": 1127.02,
+            "p95_ms": 1754.95
+          },
+          "getAgents": {
+            "calls": 1570,
+            "total_ms": 57386,
+            "p50_ms": 0.06,
+            "p95_ms": 274.98
+          },
+          "discoverCandidates": {
+            "calls": 250,
+            "total_ms": 48087,
+            "p50_ms": 196.96,
+            "p95_ms": 325.71
+          },
+          "interestMatches": {
+            "calls": 250,
+            "total_ms": 32908,
+            "p50_ms": 120.31,
+            "p95_ms": 279.84
+          },
+          "insertMatchedNotifications": {
+            "calls": 215,
+            "total_ms": 24938,
+            "p50_ms": 106.3,
+            "p95_ms": 232.52
+          },
+          "affinityStats": {
+            "calls": 250,
+            "total_ms": 23683,
+            "p50_ms": 81.11,
+            "p95_ms": 223.03
+          },
+          "deliveryCounts": {
+            "calls": 250,
+            "total_ms": 23627,
+            "p50_ms": 80.98,
+            "p95_ms": 222.68
+          },
+          "getRoutingLog": {
+            "calls": 250,
+            "total_ms": 10128,
+            "p50_ms": 41.09,
+            "p95_ms": 69.04
+          },
+          "saveRoutingLog": {
+            "calls": 250,
+            "total_ms": 6475,
+            "p50_ms": 23.63,
+            "p95_ms": 41.59
+          },
+          "insertPost": {
+            "calls": 250,
+            "total_ms": 6390,
+            "p50_ms": 21.07,
+            "p95_ms": 61.51
+          },
+          "getAgent": {
+            "calls": 123267,
+            "total_ms": 5239,
+            "p50_ms": 0.04,
+            "p95_ms": 0.1
+          }
+        }
+      },
+      "storage_details": null
+    }
+  ]
+}

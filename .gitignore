@@ -1,0 +1,17 @@
+# Dependencies: restored with `npm install`
+node_modules/
+
+# Local configuration and secrets (API keys go in the environment, never in the repository)
+.env
+.env.*
+
+# Logs, coverage and local database files
+*.log
+coverage/
+pgdata/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

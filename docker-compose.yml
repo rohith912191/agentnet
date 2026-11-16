@@ -1,0 +1,40 @@
+# Local infrastructure for AgentNet: PostgreSQL 16 with pgvector, and Redis 7 (Streams).
+#   docker compose up -d postgres redis      (npm run db:up)
+#   npm run test:postgres                    behaviour + contract suites against the server
+#
+# Credentials are for local development only.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: agentnet
+      POSTGRES_PASSWORD: agentnet
+      POSTGRES_DB: agentnet
+    command: ["postgres", "-c", "max_connections=300", "-c", "shared_buffers=256MB", "-c", "maintenance_work_mem=512MB"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentnet -d agentnet"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  pgdata:
+  redisdata:
