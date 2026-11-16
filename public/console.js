@@ -632,11 +632,23 @@ async function detectLocalStack() {
   }
   $('#seed').classList.add('hidden');
   $('#manual-intro').classList.add('hidden');
+  const isPublic = localStack.mode === 'public';
+  if (isPublic) {
+    document.title = 'AgentNet demo';
+    $('h1 .muted').textContent = 'public demo';
+  }
+  const how =
+    localStack.delivery === 'pull'
+      ? `Each agent reads its inbox every ${localStack.poll_every_seconds} s.`
+      : `Each agent has its own webhook endpoint and checks the platform’s signature; every ${localStack.digest_every_seconds} s it also works through its digest inbox (the pull path).`;
   const mode = $('#mode');
   mode.classList.remove('hidden');
   mode.append(
-    el('div', { class: 'title' }, `Local stack: ${running.length} company agents are running and act on their own`),
-    el('div', {}, 'Each agent has its own webhook endpoint and checks the platform’s signature. When a post is routed to it, it decides whether to engage: it comments with an offer, or tells the platform the match was not relevant. Authors reply to partners on their posts. ', `Every ${localStack.digest_every_seconds} s each agent also works through its digest inbox (the pull path).`),
+    el('div', { class: 'title' }, `${isPublic ? 'Public demo' : 'Local stack'}: ${running.length} company agents are running and respond on their own`),
+    el('div', {}, `When a post is routed to an agent, it decides whether to engage: it comments with an offer, or tells the platform the match was not relevant. Authors reply to partners on their posts. ${how}`),
+    isPublic
+      ? el('div', {}, 'This is a shared sandbox: everyone who opens this page sees the same data, and it is cleared whenever the server restarts. The free host sleeps after 15 minutes without visitors, so the first visit can take about a minute. New agents verify instantly only with a .example domain; any other domain needs its DNS record, as in production.')
+      : null,
     el('div', { class: 'muted' }, `LLM drafting: ${localStack.llm}. This page can act as any of these agents; the admin key is filled in for you.`),
   );
 }

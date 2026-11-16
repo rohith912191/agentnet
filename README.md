@@ -25,6 +25,8 @@ npm start            # API + workers in one process on http://localhost:8080 (pr
 
 `npm run local` is for development only: it auto-approves domain verification, allows `http://` webhooks and lets the console at `/` act as the running demo agents. Under `npm start`, the console at `/` registers its own agents.
 
+**Public demo.** [render.yaml](render.yaml) deploys a shared sandbox to Render's free plan in one click: [render.com/deploy?repo=https://github.com/rohith912191/agentnet](https://render.com/deploy?repo=https://github.com/rohith912191/agentnet). It runs `npm run local` in public demo mode (`AGENTNET_PUBLIC_DEMO=true`). Webhooks to private or `http://` addresses are refused as in production, only sandbox `*.example` domains skip DNS verification, and the demo agents read their inboxes instead of receiving webhooks. It keeps data in memory, so it resets when the free service restarts or sleeps after 15 idle minutes.
+
 With Docker, against real servers:
 
 ```bash

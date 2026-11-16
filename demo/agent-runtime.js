@@ -1,16 +1,21 @@
 // A minimal company agent, the kind of client a company would run against AgentNet.
 // It registers, verifies its domain, receives signed webhooks, decides whether to engage, and
 // either comments with a concrete offer or tells the platform the match was not relevant.
+//
+// mode 'webhook' (default): the platform pushes signed events to the agent's own HTTP endpoint.
+// mode 'pull': no endpoint; the agent reads its inbox every few seconds instead (for hosts where
+// the platform cannot reach the agent, such as the public demo, which refuses private webhooks).
 
 import http from 'node:http';
 import { verifyWebhookSignature } from '../src/security/auth.js';
 import { draftAuthorReply, draftMatchResponse } from '../src/agent/drafting.js';
 
 export class CompanyAgent {
-  constructor({ persona, platformUrl, llm = null }) {
+  constructor({ persona, platformUrl, llm = null, mode = 'webhook' }) {
     this.persona = persona;
     this.platformUrl = platformUrl;
     this.llm = llm;
+    this.mode = mode;
     this.pending = new Set();
     this.seenEvents = new Set();
     this.repliedTo = new Set();
@@ -23,17 +28,21 @@ export class CompanyAgent {
   }
 
   async start() {
+    if (this.mode === 'pull') return;
     this.server = http.createServer((req, res) => this.onWebhook(req, res));
     await new Promise((resolve) => this.server.listen(0, '127.0.0.1', resolve));
     this.webhookUrl = `http://127.0.0.1:${this.server.address().port}/agentnet/events`;
   }
 
   stop() {
+    this.stopPolling();
+    if (!this.server) return Promise.resolve();
     return new Promise((resolve) => this.server.close(resolve));
   }
 
   async register() {
-    const res = await this.call('POST', '/v1/agents', { ...this.persona.profile, delivery: { webhook_url: this.webhookUrl } }, { auth: false });
+    const delivery = this.mode === 'webhook' ? { delivery: { webhook_url: this.webhookUrl } } : {};
+    const res = await this.call('POST', '/v1/agents', { ...this.persona.profile, ...delivery }, { auth: false });
     this.id = res.agent.id;
     this.apiKey = res.credentials.api_key;
     this.webhookSecret = res.credentials.webhook_secret;
@@ -123,6 +132,45 @@ export class CompanyAgent {
     const body = drafted ?? `Thanks ${comment.author.company}, ${this.company} is in. Our partnerships team will reach out today to agree budgets and go-live dates.`;
     this.activity.push({ kind: 'reply', post_id: post.id, to: comment.author.id, source: drafted ? 'llm' : 'policy' });
     await this.call('POST', `/v1/posts/${post.id}/comments`, { body, reply_to: comment.id });
+  }
+
+  // ---- pull mode -----------------------------------------------------------------------------
+
+  /** Reads the inbox every `everyMs` and handles each new notification as a webhook would. */
+  startPolling(everyMs = 1_500) {
+    this.polling = true;
+    const tick = async () => {
+      if (!this.polling) return;
+      await this.pollInbox().catch((err) => this.activity.push({ kind: 'error', error: err.message }));
+      if (this.polling) this.pollTimer = setTimeout(tick, everyMs);
+    };
+    this.pollTimer = setTimeout(tick, everyMs);
+  }
+
+  stopPolling() {
+    this.polling = false;
+    clearTimeout(this.pollTimer);
+  }
+
+  /** One pass over the unacknowledged inbox, oldest first. Every item is acknowledged once handled. */
+  async pollInbox() {
+    const { notifications } = await this.call('GET', '/v1/inbox?unacked=true&limit=50');
+    for (const n of [...notifications].reverse()) {
+      if (!this.seenEvents.has(n.id)) {
+        this.seenEvents.add(n.id);
+        try {
+          if (n.event === 'post.matched') {
+            await this.respondToMatch(n.id, await this.call('GET', `/v1/posts/${n.post.id}`), { score: n.score });
+          } else if (n.event === 'comment.created' && n.comment) {
+            await this.onComment(await this.call('GET', `/v1/posts/${n.post.id}`), n.comment);
+          }
+        } catch (err) {
+          this.activity.push({ kind: 'error', error: err.message }); // e.g. the post was taken down meanwhile
+        }
+      }
+      await this.call('POST', `/v1/notifications/${n.id}/ack`).catch(() => {});
+    }
+    return notifications.length;
   }
 
   /** Pull path: read the digest inbox and act on anything worth acting on. */

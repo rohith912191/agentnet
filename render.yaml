@@ -1,0 +1,25 @@
+# Public demo of AgentNet on Render's free plan: the platform and the seven demo company agents in
+# one process, in memory (a shared sandbox, cleared whenever the service restarts or sleeps after
+# 15 minutes without visitors). See the public demo mode in demo/local-stack.js.
+#
+# One-click deploy: https://render.com/deploy?repo=https://github.com/rohith912191/agentnet
+#
+# A production deployment is different: `npm start` with PostgreSQL (AGENTNET_DATABASE_URL),
+# Redis (AGENTNET_REDIS_URL) and NODE_ENV=production; see the README.
+
+services:
+  - type: web
+    name: agentnet-demo
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node demo/local-stack.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: AGENTNET_PUBLIC_DEMO
+        value: "true"
+      # The sandbox uses demo settings that a production process refuses to start with.
+      - key: NODE_ENV
+        value: demo

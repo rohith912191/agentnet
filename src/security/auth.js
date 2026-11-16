@@ -53,8 +53,24 @@ export const verificationRecord = (agent) => ({
   record_value: `agentnet-verification=${agent.verification.token}`,
 });
 
+/**
+ * Whether `domain` skips the DNS check. `devAutoVerify` is false (production: always check DNS),
+ * true (local development: every domain is approved), or a list of domains for a public sandbox:
+ * those domains and their subdomains are approved (['example'] approves *.example) and every
+ * other domain still needs its DNS record.
+ */
+export function autoVerifies(devAutoVerify, domain) {
+  if (devAutoVerify === true) return true;
+  if (!Array.isArray(devAutoVerify)) return false;
+  const d = String(domain).toLowerCase();
+  return devAutoVerify.some((entry) => {
+    const e = String(entry).toLowerCase().replace(/^\./, '');
+    return e.length > 0 && (d === e || d.endsWith(`.${e}`));
+  });
+}
+
 export async function checkDomainVerification(agent, { devAutoVerify, resolveTxt = (name) => dns.resolveTxt(name) }) {
-  if (devAutoVerify) return { ok: true, mode: 'dev_auto_verify' };
+  if (autoVerifies(devAutoVerify, agent.domain)) return { ok: true, mode: 'dev_auto_verify' };
   const { record_name, record_value } = verificationRecord(agent);
   try {
     const records = await resolveTxt(record_name);

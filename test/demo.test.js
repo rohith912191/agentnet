@@ -61,14 +61,15 @@ test('with the LLM switched on but no credentials, the demo still reproduces the
   }
 });
 
-test('local stack (npm run local): the running agents respond to the brief’s post by themselves', async () => {
+/** Starts demo/local-stack.js on a free port; resolves once its agents are registered. */
+async function startStack(env = {}) {
   const child = spawn(process.execPath, ['demo/local-stack.js'], {
     cwd: root,
-    env: { ...process.env, PORT: '0', AGENTNET_LLM: 'none', NODE_ENV: 'test', AGENTNET_DATABASE_URL: '', AGENTNET_ADMIN_KEY: 'test-admin-key-0123456789' },
+    env: { ...process.env, PORT: '0', AGENTNET_LLM: 'none', NODE_ENV: 'test', AGENTNET_DATABASE_URL: '', AGENTNET_ADMIN_KEY: 'test-admin-key-0123456789', AGENTNET_PUBLIC_DEMO: '', ...env },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
+  let output = '';
   try {
-    let output = '';
     const port = await new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error(`local stack did not start:\n${output}`)), 30_000);
       child.stdout.on('data', (chunk) => {
@@ -81,36 +82,76 @@ test('local stack (npm run local): the running agents respond to the brief’s p
       });
       child.once('exit', (code) => reject(new Error(`local stack exited (${code}):\n${output}`)));
     });
-    const base = `http://127.0.0.1:${port}`;
-    const page = await fetch(`${base}/`);
-    assert.equal(page.status, 200);
+    return { child, base: `http://127.0.0.1:${port}` };
+  } catch (err) {
+    child.kill();
+    throw err;
+  }
+}
+
+const as = (agent) => ({ authorization: `Bearer ${agent.apiKey}`, 'content-type': 'application/json' });
+
+/** Publishes the brief's post as Swiggy and waits for the agents' own comments (nobody else acts). */
+async function briefRespondsByItself(base, local, { waitMs }) {
+  const swiggy = local.agents.find((a) => a.company === 'Swiggy');
+  const posted = await fetch(`${base}/v1/posts`, {
+    method: 'POST',
+    headers: as(swiggy),
+    body: JSON.stringify({ type: 'offer', title: 'Diwali offer: 5% off all deliveries', body: 'Swiggy is giving 5% off on all food delivery orders across India during Diwali week. Partners are welcome to stack extra offers on top.' }),
+  });
+  assert.equal(posted.status, 202);
+  const post = await posted.json();
+
+  let comments = [];
+  for (const end = Date.now() + waitMs; Date.now() < end && comments.filter((c) => !c.reply_to).length < 2; ) {
+    await new Promise((r) => setTimeout(r, 100));
+    comments = (await (await fetch(`${base}/v1/posts/${post.id}/comments`, { headers: as(swiggy) })).json()).comments;
+  }
+  const byCompany = (name) => comments.find((c) => c.author.company === name && !c.reply_to);
+  assert.match(byCompany('PhonePe')?.body ?? '', /Extra ₹50 cashback when you pay for Swiggy orders with PhonePe UPI on Diwali/);
+  assert.ok(byCompany('HDFC Bank'), 'HDFC Bank responds');
+  assert.equal(byCompany('Bajaj Auto'), undefined, 'Bajaj Auto is not notified, so it does not respond');
+
+  const routing = await (await fetch(`${base}/v1/admin/posts/${post.id}/routing`, { headers: { 'x-admin-key': 'test-admin-key-0123456789' } })).json();
+  assert.equal(routing.decisions.find((d) => d.company === 'Bajaj Auto'), undefined);
+}
+
+test('local stack (npm run local): the running agents respond to the brief’s post by themselves', async () => {
+  const { child, base } = await startStack();
+  try {
+    assert.equal((await fetch(`${base}/`)).status, 200);
     const local = await (await fetch(`${base}/local/agents`)).json();
+    assert.equal(local.mode, 'local');
+    assert.equal(local.delivery, 'webhook');
     assert.equal(local.agents.length, 7);
     assert.equal(local.llm, 'off');
-    const swiggy = local.agents.find((a) => a.company === 'Swiggy');
-    const as = (agent) => ({ authorization: `Bearer ${agent.apiKey}`, 'content-type': 'application/json' });
+    await briefRespondsByItself(base, local, { waitMs: 10_000 });
+  } finally {
+    child.kill();
+  }
+});
 
-    const posted = await fetch(`${base}/v1/posts`, {
-      method: 'POST',
-      headers: as(swiggy),
-      body: JSON.stringify({ type: 'offer', title: 'Diwali offer: 5% off all deliveries', body: 'Swiggy is giving 5% off on all food delivery orders across India during Diwali week. Partners are welcome to stack extra offers on top.' }),
-    });
-    assert.equal(posted.status, 202);
-    const post = await posted.json();
+test('public demo mode (render.yaml): agents read their inboxes, private webhooks are refused, only sandbox domains skip DNS', async () => {
+  const { child, base } = await startStack({ AGENTNET_PUBLIC_DEMO: 'true' });
+  try {
+    const local = await (await fetch(`${base}/local/agents`)).json();
+    assert.equal(local.mode, 'public');
+    assert.equal(local.delivery, 'pull');
+    assert.equal(local.agents.length, 7);
+    await briefRespondsByItself(base, local, { waitMs: 20_000 });
 
-    // Nobody but the agents themselves acts from here: wait for their comments.
-    let comments = [];
-    for (let i = 0; i < 100 && comments.filter((c) => !c.reply_to).length < 2; i++) {
-      await new Promise((r) => setTimeout(r, 100));
-      comments = (await (await fetch(`${base}/v1/posts/${post.id}/comments`, { headers: as(swiggy) })).json()).comments;
-    }
-    const byCompany = (name) => comments.find((c) => c.author.company === name && !c.reply_to);
-    assert.match(byCompany('PhonePe')?.body ?? '', /Extra ₹50 cashback when you pay for Swiggy orders with PhonePe UPI on Diwali/);
-    assert.ok(byCompany('HDFC Bank'), 'HDFC Bank responds');
-    assert.equal(byCompany('Bajaj Auto'), undefined, 'Bajaj Auto is not notified, so it does not respond');
-
-    const routing = await (await fetch(`${base}/v1/admin/posts/${post.id}/routing`, { headers: { 'x-admin-key': 'test-admin-key-0123456789' } })).json();
-    assert.equal(routing.decisions.find((d) => d.company === 'Bajaj Auto'), undefined);
+    const register = (body) => fetch(`${base}/v1/agents`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const profile = { industry: 'food_delivery', description: 'Cloud-kitchen brand delivering meals across Bengaluru.', interests: ['Payment partners who can co-fund cashback on food orders'] };
+    // No SSRF from the public server: webhooks to private or local addresses are refused.
+    const ssrf = await register({ ...profile, company: 'Probe Foods', domain: 'probe.example', delivery: { webhook_url: 'http://169.254.169.254/latest/meta-data' } });
+    assert.equal(ssrf.status, 400);
+    // A sandbox domain verifies instantly; a real-looking domain needs its DNS record.
+    const sandbox = await (await register({ ...profile, company: 'Tastybites', domain: 'tastybites.example' })).json();
+    const verified = await fetch(`${base}/v1/agents/me/verify`, { method: 'POST', headers: as({ apiKey: sandbox.credentials.api_key }) });
+    assert.equal(verified.status, 200);
+    const other = await (await register({ ...profile, company: 'Kitchen Co', domain: 'kitchenco.invalid' })).json();
+    const refused = await fetch(`${base}/v1/agents/me/verify`, { method: 'POST', headers: as({ apiKey: other.credentials.api_key }) });
+    assert.equal(refused.status, 422);
   } finally {
     child.kill();
   }

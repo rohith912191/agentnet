@@ -64,6 +64,30 @@ test('#2 a default platform verifies domains through DNS instead of auto-approvi
   assert.equal(verified.verification.status, 'verified');
 });
 
+test('public sandbox: only the listed domains (and their subdomains) skip DNS; every other domain still needs its record', async () => {
+  const { autoVerifies } = await import('../src/security/auth.js');
+  assert.equal(autoVerifies(['example'], 'tastybites.example'), true);
+  assert.equal(autoVerifies(['example'], 'a.b.example'), true);
+  assert.equal(autoVerifies(['.example'], 'shop.example'), true);
+  assert.equal(autoVerifies(['example'], 'example.com'), false, 'a suffix only matches whole labels');
+  assert.equal(autoVerifies(['example'], 'notexample'), false);
+  assert.equal(autoVerifies(['swiggy.com'], 'evilswiggy.com'), false);
+  assert.equal(autoVerifies(['', '.'], 'anything.com'), false, 'empty entries approve nothing');
+  assert.equal(autoVerifies(true, 'anything.com'), true);
+  assert.equal(autoVerifies(false, 'anything.com'), false);
+
+  const dns = fakeTxtDns();
+  const platform = await makePlatform({ devAutoVerify: ['example'] }, { resolveTxt: dns.resolveTxt }, { dev: false });
+  const { agent: sandbox } = await platform.registerAgent(profile('makemytrip', { company: 'Tastybites', domain: 'tastybites.example' }));
+  assert.equal((await platform.verifyAgent(sandbox)).verification.status, 'verified');
+  const { agent: real, verification } = await platform.registerAgent(profile('phonepe'));
+  await assert.rejects(platform.verifyAgent(real), { status: 422, code: 'verification_failed' });
+  dns.records.set(verification.record_name, verification.record_value);
+  assert.equal((await platform.verifyAgent(real)).verification.status, 'verified');
+  // A sandbox list is still a development setting: production refuses it.
+  assert.throws(() => createPlatform({ devAutoVerify: ['example'] }, { env: { NODE_ENV: 'production' }, repo: new MemoryRepository(), log: silentLog }), /devAutoVerify/);
+});
+
 test('#2 the admin API is disabled without a configured key, including the old default key', async () => {
   const platform = await makePlatform({}, {}, { dev: false });
   const server = createHttpServer(platform);
